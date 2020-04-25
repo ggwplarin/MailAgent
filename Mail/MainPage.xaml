@@ -1,0 +1,178 @@
+﻿<Page
+    x:Class="Mail.MainPage"
+    
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Mail"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    
+    
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+
+            <SymbolIcon x:Name="Report" Symbol="Flag" HorizontalAlignment="Center" Loaded="Report_Loaded" VerticalAlignment="Center" Margin="24" ToolTipService.ToolTip="Report a problem" Tapped="Report_Tapped">
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout x:Name="ProblemReportFlyout" Placement="Full">
+                        <Grid Margin="8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="Report" FontSize="28" Margin="2"/>
+                                <ComboBox x:Name="ProblemType" Grid.Row="1" PlaceholderText="Select the type of a problem" Header="Problem type" Margin="2">
+                                    <x:String>Cosmetic mismatch</x:String>
+                                    <x:String>Mistake in the text</x:String>
+                                    <x:String>Broken functionality</x:String>
+                                    <x:String>Performance</x:String>
+                                    <x:String>App unresponsiveness</x:String>
+                                    <x:String>Application crash</x:String>
+                                </ComboBox>
+                                <TextBox x:Name="ProblemHeader" Width="320" Margin="2" Header="Key part of the problem" MaxLength="100"/>
+                                <TextBox x:Name="ProblemBody" Width="320" Margin="2" Header="Problem reproducing steps" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"/>
+                                <TextBox x:Name="Expected" Width="320" Margin="2" Header="Expected result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"/>
+                                <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"/>
+                            </StackPanel>
+                        </Grid>
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
+            </SymbolIcon>
+        </StackPanel>
+
+        <controls:TeachingTip x:Name="ReportTip"                   
+	Target="{x:Bind Report}"
+	Title="Test version"                                        
+	Subtitle="Note that you are using a test version of the application, if a problem occurs, use this button to report an error.">
+            <controls:TeachingTip.IconSource>
+                <controls:SymbolIconSource Symbol="Important" />
+            </controls:TeachingTip.IconSource>
+        </controls:TeachingTip>
+
+
+        <Grid>
+                <SplitView x:Name="splitView" PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+           IsPaneOpen="True" OpenPaneLength="216" CompactPaneLength="64" DisplayMode="Inline">
+                    <SplitView.Pane>
+                        <StackPanel Orientation="Vertical">
+
+                            <ListView x:Name="AccountsListView" Grid.Row="1" ItemClick="AccountsListView_ItemClick" ItemsSource="{x:Bind Accounts}" Margin="0,0,0,0" >
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:Account">
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse x:Name="Ellipse"
+					                    Grid.RowSpan="2"
+					                    Width ="32"
+					                    Height="32"
+					                    Margin="0"
+					                    VerticalAlignment="Center"
+					                    HorizontalAlignment="Center"
+					                    Fill="{x:Bind AvatarColor}"/>
+                                            <SymbolIcon Symbol="Contact" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Opacity="0.5"/>
+                                            <TextBlock Grid.Column="1"
+					                    Text="{x:Bind Name}"
+					                    
+					                    Style="{ThemeResource BaseTextBlockStyle}"
+					                    Margin="12,6,0,0"/>
+                                            <TextBlock  Grid.Column="1"
+					                    Grid.Row="1"
+					                    Text="{x:Bind EMail}"
+					                    
+					                    Style="{ThemeResource BodyTextBlockStyle}"
+					                    Margin="12,0,0,6"/>
+
+                                        </Grid>
+
+
+
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                            </ListView>
+                            <AppBarButton x:Name="AddNewAccountBtn" Label="Add new account" Icon="Add" Width="216" Style="{StaticResource AppBarButtonRevealStyle}"/>
+
+                        </StackPanel>
+                    </SplitView.Pane>
+                    <SplitView.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Horizontal">
+                                <AppBarButton Icon="Refresh" Height="40" Width="40"/>
+                                <AppBarButton Icon="Find" Height="40" Width="40"/>
+                                <AppBarButton Icon="Sort" Height="40" Width="40"/>
+                            </StackPanel>
+                            <ProgressRing Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True" Width="64" Height="64"/>
+                            <ListView x:Name="InboxList" Grid.Row="1" ItemClick="InboxList_ItemClick" Loaded="InboxList_Loaded" ItemsSource="{x:Bind AllEMails}" Margin="0,0,0,0" >
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:Email">
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="*"/>
+
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="1"
+					                    Text="{x:Bind EmailTheme}"
+					                    
+					                    Style="{ThemeResource BaseTextBlockStyle}"
+					                    Margin="12,6,0,0"/>
+                                            <TextBlock  Grid.Column="1"
+					                    Grid.Row="1"
+					                    Text="{x:Bind EmailSender}"
+					                    
+					                    Style="{ThemeResource BodyTextBlockStyle}"
+					                    Margin="12,0,0,6"/>
+
+                                        </Grid>
+
+
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                            </ListView>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <AppBarButton/>
+                                <AppBarButton/>
+                                <AppBarButton/>
+                            </StackPanel>
+                        </Grid>
+
+                    </SplitView.Content>
+                </SplitView>
+
+        </Grid>
+        
+        
+    </Grid>
+</Page>
