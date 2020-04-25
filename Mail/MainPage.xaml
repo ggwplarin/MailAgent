@@ -38,7 +38,15 @@
                                 <TextBox x:Name="Expected" Width="320" Margin="2" Header="Expected result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
                                 <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
                             </StackPanel>
-                            <AppBarButton x:Name="SendReportBtn" Grid.Row="1" Icon="Send" Label="Send" Click="SendReportBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                            <AppBarButton x:Name="SendReportBtn"  Grid.Row="1" Icon="Send" Label="Send" Click="SendReportBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                            <controls:TeachingTip x:Name="ReportBtnWarn"                   
+	                        Target="{x:Bind SendReportBtn}"
+	                        Title="All fields must be filled!"
+                            Subtitle="Fill them in and try again">
+                                <controls:TeachingTip.IconSource>
+                                    <controls:SymbolIconSource Symbol="Important" />
+                                </controls:TeachingTip.IconSource>
+                            </controls:TeachingTip>
                         </Grid>
                     </Flyout>
                 </FlyoutBase.AttachedFlyout>

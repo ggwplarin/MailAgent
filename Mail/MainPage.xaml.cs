@@ -144,10 +144,20 @@ namespace Mail
             smtp.Send(m);
 
         }
-
+        public bool IsNotEmptyStr(string inputStr)
+        {
+            return inputStr.Replace("\n", "").Replace(" ","").Length>0;
+        }
         private void SendReportBtn_Click(object sender, RoutedEventArgs e)
         {
-            SendReport();
+            ReportBtnWarn.IsOpen = false;
+            if (IsNotEmptyStr(ProblemHeader.Text)&& IsNotEmptyStr(ProblemBody.Text)&& IsNotEmptyStr(Expected.Text)&& IsNotEmptyStr(Actual.Text)&&ProblemType.SelectedIndex!=-1) {
+                SendReport();
+            }
+            else
+            {
+                ReportBtnWarn.IsOpen = true;
+            }
         }
     }
 }
