@@ -61,28 +61,9 @@ namespace Mail
         public void RefreshInbox()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            //using (var client = new ImapClient())
-            //{
-            //    client.Connect("imap.gmail.com", 993, true);//replace gmail to Account.service~
-            //    client.Authenticate("al8137962@gmail.com", "kbnthfneh");
-            //    //client.Authenticate(Accounts[AccountsListView.SelectedIndex].EMail, Accounts[AccountsListView.SelectedIndex].Password);
-            //    client.Inbox.Open(FolderAccess.ReadOnly);
-            //    var unreed = client.Inbox.Search(SearchQuery.New);
-            //    var all = client.Inbox.Search(SearchQuery.All);
-            //    UnreedEMails.Clear();
-            //    foreach (var m in unreed)
-            //    {
-            //        var message = client.Inbox.GetMessage(m);
-            //        UnreedEMails.Add(new Email(message.Sender.ToString(), message.Subject.ToString()));
-            //    }
-            //    foreach (var m in all)
-            //    {
-            //        var message = client.Inbox.GetMessage(m);
-            //        AllEMails.Add(new Email(message.Sender.ToString(), message.Subject.ToString()));
-            //    }
-            //}
+            
 
-            ImapClient client = new ImapClient("imap.gmail.com", "isip_a.o.larin@mpt.ru", "Kbnthfneh1", AuthMethods.Login, 993, true);
+            ImapClient client = new ImapClient(Accounts[AccountsListView.SelectedIndex].Service, Accounts[AccountsListView.SelectedIndex].EMail, Accounts[AccountsListView.SelectedIndex].Password, AuthMethods.Login, 993, true);
             client.SelectMailbox("INBOX");
             MailMessage[] mails = client.GetMessages(0, client.GetMessageCount());
             foreach(MailMessage m in mails)
@@ -97,10 +78,8 @@ namespace Mail
         public MainPage()
         {
            
-            Accounts.Add(new Account(1, "ggwp", "dgfg", "isip_a.o.larin@mpt.ru", "рр", Color.FromArgb(255,0,255,255)));//for test/remowe it 
-            Accounts.Add(new Account(1, "ggwp", "dgfg", "lanaya@gg.wp", "ппцз", Color.FromArgb(255, 255, 0, 255)));
-            Accounts.Add(new Account(1, "ggwp", "dgfg", "lanaya@gg.wp", "ппцз", Color.FromArgb(255, 255, 255, 0)));
-            RefreshInbox();
+            
+            
             this.InitializeComponent();
         }
 
@@ -162,6 +141,9 @@ namespace Mail
             }
             
             string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.Text}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}\n\nSysStat:\n{sysStat}";
+
+
+
         }
     }
 }
