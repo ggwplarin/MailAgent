@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-
+using System.Net.Mail;
+using System.Net;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -65,8 +66,8 @@ namespace Mail
 
             ImapClient client = new ImapClient(Accounts[AccountsListView.SelectedIndex].Service, Accounts[AccountsListView.SelectedIndex].EMail, Accounts[AccountsListView.SelectedIndex].Password, AuthMethods.Login, 993, true);
             client.SelectMailbox("INBOX");
-            MailMessage[] mails = client.GetMessages(0, client.GetMessageCount());
-            foreach(MailMessage m in mails)
+            AE.Net.Mail.MailMessage[] mails = client.GetMessages(0, client.GetMessageCount());
+            foreach(AE.Net.Mail.MailMessage m in mails)
             {
                 AllEMails.Add(new Email(m.From.Address, m.Subject));
             }
@@ -118,32 +119,35 @@ namespace Mail
 
         public void SendReport()
         {
-            string sysStat = "";
-            // code from that guide https://upread.ru/art.php?id=31
-            System.Management.ManagementClass myManagementClass = new System.Management.ManagementClass("Win32_Processor");
-            System.Management.ManagementObjectCollection myManagementCollection = myManagementClass.GetInstances();
-            System.Management.PropertyDataCollection myProperties = myManagementClass.Properties;
-            Dictionary<string, object> myPropertyResults = new Dictionary<string, object>();
-
-            foreach (var obj in myManagementCollection)
-            {
-                foreach (var myProperty in myProperties)
-                {
-                    myPropertyResults.Add(myProperty.Name,
-                       obj.Properties[myProperty.Name].Value);
-                }
-            }
-
-            foreach (var myPropertyResult in myPropertyResults)
-            {
-                sysStat += $"{myPropertyResult.Key}: {myPropertyResult.Value}\n";
-                 
-            }
             
-            string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.Text}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}\n\nSysStat:\n{sysStat}";
+            string messageSubject = $"{ProblemHeader.Text}|{ProblemType.SelectedIndex}";
+            string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.SelectedIndex}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}";
 
+            // отправитель - устанавливаем адрес и отображаемое в письме имя
+            System.Net.Mail.MailAddress from = new MailAddress("report.agent.mail@gmail.com", "ReportAgent");
+            // кому отправляем
+            System.Net.Mail.MailAddress to = new MailAddress("isip_a.o.larin@mpt.ru");
+            // создаем объект сообщения
+            System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(from, to);
+            // тема письма
+            m.Subject = messageSubject;
+            // текст письма
+            m.Body = messageText;
+            // письмо представляет код html
+            m.IsBodyHtml = false;
+            // адрес smtp-сервера и порт, с которого будем отправлять письмо
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            // логин и пароль
+            smtp.Credentials = new NetworkCredential("report.agent.mail@gmail.com", "#reporter1");
 
+            smtp.EnableSsl = true;
+            smtp.Send(m);
 
+        }
+
+        private void SendReportBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SendReport();
         }
     }
 }

@@ -22,13 +22,10 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                            
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="Report" FontSize="28" Margin="2"/>
-                                <ComboBox x:Name="ProblemType" Grid.Row="1" PlaceholderText="Select the type of a problem" Header="Problem type" Margin="2">
+                                <ComboBox x:Name="ProblemType" Grid.Row="1" PlaceholderText="Select the type of a problem" Header="Problem type" Margin="2" HorizontalAlignment="Center" Width="320">
                                     <x:String>Cosmetic mismatch</x:String>
                                     <x:String>Mistake in the text</x:String>
                                     <x:String>Broken functionality</x:String>
@@ -36,11 +33,12 @@
                                     <x:String>App unresponsiveness</x:String>
                                     <x:String>Application crash</x:String>
                                 </ComboBox>
-                                <TextBox x:Name="ProblemHeader" Width="320" Margin="2" Header="Key part of the problem" MaxLength="100"/>
-                                <TextBox x:Name="ProblemBody" Width="320" Margin="2" Header="Problem reproducing steps" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"/>
-                                <TextBox x:Name="Expected" Width="320" Margin="2" Header="Expected result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"/>
-                                <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500"/>
+                                <TextBox x:Name="ProblemHeader" Width="320" Margin="2" Header="Key part of the problem" MaxLength="100" HorizontalAlignment="Center"/>
+                                <TextBox x:Name="ProblemBody" Width="320" Margin="2" Header="Problem reproducing steps" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                <TextBox x:Name="Expected" Width="320" Margin="2" Header="Expected result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
                             </StackPanel>
+                            <AppBarButton x:Name="SendReportBtn" Grid.Row="1" Icon="Send" Label="Send" Click="SendReportBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                         </Grid>
                     </Flyout>
                 </FlyoutBase.AttachedFlyout>
