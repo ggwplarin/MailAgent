@@ -16,7 +16,7 @@
 
             <SymbolIcon x:Name="Report" Symbol="Flag" HorizontalAlignment="Center" Loaded="Report_Loaded" VerticalAlignment="Center" Margin="24" ToolTipService.ToolTip="Report a problem" Tapped="Report_Tapped">
                 <FlyoutBase.AttachedFlyout>
-                    <Flyout x:Name="ProblemReportFlyout" Placement="Full">
+                    <Flyout x:Name="ProblemReportFlyout" Placement="Full" ShowMode="Standard" LightDismissOverlayMode="On">
                         <Grid Margin="8">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -39,12 +39,21 @@
                                 <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
                             </StackPanel>
                             <AppBarButton x:Name="SendReportBtn"  Grid.Row="1" Icon="Send" Label="Send" Click="SendReportBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                            <controls:TeachingTip x:Name="ReportBtnWarn"                   
+                            <!--TODO replace this to somthing else//mb TextBlock with message-->
+                            <controls:TeachingTip x:Name="ReportBtnWarn"                
 	                        Target="{x:Bind SendReportBtn}"
 	                        Title="All fields must be filled!"
-                            Subtitle="Fill them in and try again">
+                            Subtitle="Fill them in and try again.">
                                 <controls:TeachingTip.IconSource>
                                     <controls:SymbolIconSource Symbol="Important" />
+                                </controls:TeachingTip.IconSource>
+                            </controls:TeachingTip>
+                            <controls:TeachingTip x:Name="ReportBtnNoConnection"                   
+	                        Target="{x:Bind SendReportBtn}"
+	                        Title="No internet connection!"
+                            Subtitle="Check your internet connection and try again.">
+                                <controls:TeachingTip.IconSource>
+                                    <controls:SymbolIconSource Symbol="ZeroBars" />
                                 </controls:TeachingTip.IconSource>
                             </controls:TeachingTip>
                         </Grid>

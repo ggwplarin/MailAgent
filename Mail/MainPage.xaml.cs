@@ -117,11 +117,10 @@ namespace Mail
             ReportTip.IsOpen = true;
         }
 
-        public void SendReport()
+        public void SendReport(string messageSubject, string messageText)
         {
             
-            string messageSubject = $"{ProblemHeader.Text}|{ProblemType.SelectedIndex}";
-            string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.SelectedIndex}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}";
+            
 
             // отправитель - устанавливаем адрес и отображаемое в письме имя
             System.Net.Mail.MailAddress from = new MailAddress("report.agent.mail@gmail.com", "ReportAgent");
@@ -148,11 +147,34 @@ namespace Mail
         {
             return inputStr.Replace("\n", "").Replace(" ","").Length>0;
         }
-        private void SendReportBtn_Click(object sender, RoutedEventArgs e)
+        private async void SendReportBtn_Click(object sender, RoutedEventArgs e)
         {
+            ReportBtnNoConnection.IsOpen = false;
+            
             ReportBtnWarn.IsOpen = false;
             if (IsNotEmptyStr(ProblemHeader.Text)&& IsNotEmptyStr(ProblemBody.Text)&& IsNotEmptyStr(Expected.Text)&& IsNotEmptyStr(Actual.Text)&&ProblemType.SelectedIndex!=-1) {
-                SendReport();
+                string messageSubject = $"{ProblemHeader.Text}|{ProblemType.SelectedIndex}";
+                string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.SelectedIndex}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}";
+                try
+                {
+                    System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
+                    System.Net.NetworkInformation.PingReply pingReply = ping.Send("www.google.com");
+                    if (pingReply.Status.ToString() != "Success") { ReportBtnNoConnection.IsOpen = true; }
+                    else
+                    {
+
+                        await Task.Run(() => SendReport(messageSubject, messageText));
+                        ProblemHeader.Text = "";
+                        ProblemBody.Text = "";
+                        Expected.Text = "";
+                        Expected.Text = "";
+                        ProblemType.SelectedIndex = -1;
+                    }
+                }
+                catch
+                {
+                    ReportBtnNoConnection.IsOpen = true;
+                }
             }
             else
             {
