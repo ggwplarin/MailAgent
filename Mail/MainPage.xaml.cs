@@ -57,11 +57,10 @@ namespace Mail
     {
 
 
-        public List<Account> Account11s = new List<Account>();
-        public List<Email> AllEMails = new List<Email>();
+        
         ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
 
-        ObservableCollection<Email> EmailsFiltered = new ObservableCollection<Email>();
+        ObservableCollection<Email> AllEMails = new ObservableCollection<Email>();
 
         public void RefreshInbox()
         {
@@ -215,6 +214,13 @@ namespace Mail
             {
 
             }
+        }
+
+        private void RefreshInboxBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //if (Accounts.Count>1&&AccountsListView.SelectedIndex>-1){
+                RefreshInbox();
+            //}
         }
     }
 }

@@ -163,11 +163,11 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal">
-                                <AppBarButton Icon="Refresh" Height="40" Width="40"/>
+                                <AppBarButton x:Name="RefreshInboxBtn" Click="RefreshInboxBtn_Click" Icon="Refresh" Height="40" Width="40"/>
                                 <AppBarButton Icon="Find" Height="40" Width="40"/>
                                 <AppBarButton Icon="Sort" Height="40" Width="40"/>
                             </StackPanel>
-                            <ProgressRing Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True" Width="64" Height="64"/>
+                            <ProgressRing Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="False" Width="64" Height="64"/>
                             <ListView x:Name="InboxList" Grid.Row="1" ItemClick="InboxList_ItemClick" Loaded="InboxList_Loaded" ItemsSource="{x:Bind AllEMails}" Margin="0,0,0,0" >
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="local:Email">
