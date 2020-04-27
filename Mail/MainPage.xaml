@@ -120,9 +120,35 @@
                                 </ListView.ItemTemplate>
 
                             </ListView>
-                            <AppBarButton x:Name="AddNewAccountBtn" Label="Add new account" Icon="Add" Width="216" Style="{StaticResource AppBarButtonRevealStyle}"/>
+                        <AppBarButton x:Name="AddNewAccountBtn" Label="Add new account" Icon="Add" Width="216" Style="{StaticResource AppBarButtonRevealStyle}" Click="AddNewAccountBtn_Click" AllowFocusOnInteraction="True">
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout x:Name="AddNewAccFlyout" Placement="Full" LightDismissOverlayMode="On">
+                                    
+                                    <Grid Margin="8" >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="Add new account" FontSize="28" Margin="2"/>
 
-                        </StackPanel>
+                                            <TextBox x:Name="AccountNameBox" Width="320" Margin="2" Header="Account name" MaxLength="40" HorizontalAlignment="Center" />
+                                            <TextBox x:Name="EmailAdressBox" Width="320" Margin="2" Header="EMail adress" MaxLength="40" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="EmailPasswordBox" Width="320" Margin="2" Header="EMail password" MaxLength="40" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="EmailServiceBox" Width="320" Margin="2" Header="EMail service" MaxLength="40" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Avatar color" HorizontalAlignment="Center" Margin="8"/>
+                                            <ColorPicker x:Name="AccountColorPicker"  HorizontalAlignment="Center" ColorSpectrumShape="Ring" IsColorPreviewVisible="False" IsColorSliderVisible="False" IsColorSpectrumVisible="True" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>
+                                        </StackPanel> 
+                                        <AppBarButton x:Name="AcceptAddBtn"  Grid.Row="1" Icon="Send" Label="Add" Click="AcceptAddBtn_Click"  Width="320" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                        
+                                        
+                                    </Grid>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                            </AppBarButton>
+
+                    </StackPanel>
                     </SplitView.Pane>
                     <SplitView.Content>
                         <Grid>

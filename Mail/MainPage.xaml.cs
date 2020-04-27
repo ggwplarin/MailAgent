@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,46 +29,49 @@ namespace Mail
 {
 
 
-    public class Account 
+    public class Account
     {
-        public int ID;
+
         public string Name;
         public string Service;
         public string EMail;
         public string Password;
         public SolidColorBrush AvatarColor;
-        
 
-        public Account(int id, string name, string service, string email, string password, Color avatarcolor)
-        {ID = id; Name = name; Service = service; EMail = email; Password = password; AvatarColor = new SolidColorBrush(avatarcolor);}
-        
+
+        public Account(string name, string service, string email, string password, Color avatarcolor)
+        { Name = name; Service = service; EMail = email; Password = password; AvatarColor = new SolidColorBrush(avatarcolor); }
+
     }
+
 
     public class Email
     {
         public string EmailSender;
         public string EmailTheme;
 
-        public Email(string emailsender, string emailtheme) { EmailSender = emailsender;EmailTheme = emailtheme; }
+        public Email(string emailsender, string emailtheme) { EmailSender = emailsender; EmailTheme = emailtheme; }
     }
 
     public sealed partial class MainPage : Page
     {
-        
 
-        public List<Account> Accounts = new List<Account>();
+
+        public List<Account> Account11s = new List<Account>();
         public List<Email> AllEMails = new List<Email>();
-        public List<Email> UnreedEMails = new List<Email>();
+        ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
+
+        ObservableCollection<Email> EmailsFiltered = new ObservableCollection<Email>();
 
         public void RefreshInbox()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            
+
 
             ImapClient client = new ImapClient(Accounts[AccountsListView.SelectedIndex].Service, Accounts[AccountsListView.SelectedIndex].EMail, Accounts[AccountsListView.SelectedIndex].Password, AuthMethods.Login, 993, true);
             client.SelectMailbox("INBOX");
             AE.Net.Mail.MailMessage[] mails = client.GetMessages(0, client.GetMessageCount());
-            foreach(AE.Net.Mail.MailMessage m in mails)
+            foreach (AE.Net.Mail.MailMessage m in mails)
             {
                 AllEMails.Add(new Email(m.From.Address, m.Subject));
             }
@@ -78,9 +82,9 @@ namespace Mail
 
         public MainPage()
         {
-           
-            
-            
+
+
+
             this.InitializeComponent();
         }
 
@@ -102,10 +106,10 @@ namespace Mail
 
         private void InboxList_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
-        
+
 
         private void Report_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -119,8 +123,8 @@ namespace Mail
 
         public void SendReport(string messageSubject, string messageText)
         {
-            
-            
+
+
 
             // отправитель - устанавливаем адрес и отображаемое в письме имя
             System.Net.Mail.MailAddress from = new MailAddress("report.agent.mail@gmail.com", "ReportAgent");
@@ -145,14 +149,15 @@ namespace Mail
         }
         public bool IsNotEmptyStr(string inputStr)
         {
-            return inputStr.Replace("\n", "").Replace(" ","").Length>0;
+            return inputStr.Replace("\n", "").Replace(" ", "").Length > 0;
         }
         private async void SendReportBtn_Click(object sender, RoutedEventArgs e)
         {
             ReportBtnNoConnection.IsOpen = false;
-            
+
             ReportBtnWarn.IsOpen = false;
-            if (IsNotEmptyStr(ProblemHeader.Text)&& IsNotEmptyStr(ProblemBody.Text)&& IsNotEmptyStr(Expected.Text)&& IsNotEmptyStr(Actual.Text)&&ProblemType.SelectedIndex!=-1) {
+            if (IsNotEmptyStr(ProblemHeader.Text) && IsNotEmptyStr(ProblemBody.Text) && IsNotEmptyStr(Expected.Text) && IsNotEmptyStr(Actual.Text) && ProblemType.SelectedIndex != -1)
+            {
                 string messageSubject = $"{ProblemHeader.Text}|{ProblemType.SelectedIndex}";
                 string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.SelectedIndex}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}";
                 try
@@ -179,6 +184,36 @@ namespace Mail
             else
             {
                 ReportBtnWarn.IsOpen = true;
+            }
+        }
+
+        private void AddNewAccountBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
+
+
+        private void AcceptAddBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                ImapClient client = new ImapClient(EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Text, AuthMethods.Login, 993, true);
+                client.Dispose();
+
+
+                Accounts.Add(new Account(AccountNameBox.Text, EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Text, AccountColorPicker.Color));
+                AccountNameBox.Text = "";
+                EmailAdressBox.Text = "";
+                EmailPasswordBox.Text = "";
+                EmailServiceBox.Text = "";
+
+                AddNewAccFlyout.Hide();
+            }
+            catch
+            {
+
             }
         }
     }
