@@ -133,10 +133,10 @@
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock Text="Add new account" FontSize="28" Margin="2"/>
 
-                                            <TextBox x:Name="AccountNameBox" Width="320" Margin="2" Header="Account name" MaxLength="40" HorizontalAlignment="Center" />
-                                            <TextBox x:Name="EmailAdressBox" Width="320" Margin="2" Header="EMail adress" MaxLength="40" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="AccountNameBox" Width="320" Margin="2" Header="Account name" MaxLength="40" HorizontalAlignment="Center" PlaceholderText="John Doe"/>
+                                            <TextBox x:Name="EmailAdressBox" Width="320" Margin="2" Header="EMail adress" MaxLength="40" HorizontalAlignment="Center" PlaceholderText="email@gmail.com"/>
                                             <TextBox x:Name="EmailPasswordBox" Width="320" Margin="2" Header="EMail password" MaxLength="40" HorizontalAlignment="Center"/>
-                                            <TextBox x:Name="EmailServiceBox" Width="320" Margin="2" Header="EMail service" MaxLength="40" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="EmailServiceBox" Width="320" Margin="2" Header="EMail service" MaxLength="40" HorizontalAlignment="Center" PlaceholderText="gmail.com"/>
                                             <TextBlock Text="Avatar color" HorizontalAlignment="Center" Margin="8"/>
                                             <ColorPicker x:Name="AccountColorPicker"  HorizontalAlignment="Center" ColorSpectrumShape="Ring" IsColorPreviewVisible="False" IsColorSliderVisible="False" IsColorSpectrumVisible="True" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>
                                         </StackPanel> 
@@ -167,47 +167,52 @@
                                 <AppBarButton Icon="Find" Height="40" Width="40"/>
                                 <AppBarButton Icon="Sort" Height="40" Width="40"/>
                             </StackPanel>
-                            <ProgressRing Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="False" Width="64" Height="64"/>
-                            <ListView x:Name="InboxList" Grid.Row="1" ItemClick="InboxList_ItemClick" Loaded="InboxList_Loaded" ItemsSource="{x:Bind AllEMails}" Margin="0,0,0,0" >
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="local:Email">
+                            <ProgressRing x:Name="gg" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="False" Width="64" Height="64"/>
+                        <ListView x:Name="InboxList" Grid.Row="1" SelectionChanged="InboxList_SelectionChanged" Loaded="InboxList_Loaded" ItemsSource="{x:Bind AllEMails}" Margin="0,0,0,0" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local:Email">
 
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"/>
-                                                <ColumnDefinition Width="*"/>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
 
-                                            </Grid.ColumnDefinitions>
+                                        </Grid.ColumnDefinitions>
 
-                                            <TextBlock Grid.Column="1"
+                                        <TextBlock Grid.Column="1"
 					                    Text="{x:Bind EmailTheme}"
 					                    
 					                    Style="{ThemeResource BaseTextBlockStyle}"
 					                    Margin="12,6,0,0"/>
-                                            <TextBlock  Grid.Column="1"
+                                        <TextBlock  Grid.Column="1"
 					                    Grid.Row="1"
 					                    Text="{x:Bind EmailSender}"
 					                    
 					                    Style="{ThemeResource BodyTextBlockStyle}"
 					                    Margin="12,0,0,6"/>
 
-                                        </Grid>
+                                    </Grid>
 
 
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
 
-                            </ListView>
-                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        </ListView>
+                        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.RowSpan="2">
+                            <!--<StackPanel Orientation="Horizontal" >
                                 <AppBarButton/>
                                 <AppBarButton/>
                                 <AppBarButton/>
-                            </StackPanel>
-                        </Grid>
+                            </StackPanel>-->
+                            <TextBlock x:Name="MessageHeader"  TextWrapping="Wrap" FontSize="28" Margin="2"/>
+                            <TextBlock x:Name="MessageFrom"  Margin="2"/>
+                            <TextBlock x:Name="MessageBody" TextWrapping="Wrap" Text="" Margin="2"/>
+                        </StackPanel>
+                    </Grid>
 
                     </SplitView.Content>
                 </SplitView>

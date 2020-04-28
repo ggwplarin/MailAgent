@@ -49,32 +49,46 @@ namespace Mail
     {
         public string EmailSender;
         public string EmailTheme;
-
-        public Email(string emailsender, string emailtheme) { EmailSender = emailsender; EmailTheme = emailtheme; }
+        public string EmailBody;
+        public Email(string emailsender, string emailtheme, string emailBody) { EmailSender = emailsender; EmailTheme = emailtheme; EmailBody = emailBody; }
     }
 
     public sealed partial class MainPage : Page
     {
 
 
-        
+
         ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
 
         ObservableCollection<Email> AllEMails = new ObservableCollection<Email>();
 
-        public void RefreshInbox()
+        public AE.Net.Mail.MailMessage[] GetMailMessagesAsync(string service, string email, string password)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            
 
+            ImapClient client = new ImapClient(service, email, password, AuthMethods.Login, 993, true);
 
-            ImapClient client = new ImapClient(Accounts[AccountsListView.SelectedIndex].Service, Accounts[AccountsListView.SelectedIndex].EMail, Accounts[AccountsListView.SelectedIndex].Password, AuthMethods.Login, 993, true);
             client.SelectMailbox("INBOX");
-            AE.Net.Mail.MailMessage[] mails = client.GetMessages(0, client.GetMessageCount());
+
+            AE.Net.Mail.MailMessage[] mails = client.GetMessages(0, client.GetMessageCount(), false);
+            client.Dispose();
+            return mails;
+        }
+        //TODO: сделать нормально
+        public async void RefreshInbox(string service, string email, string password)
+        {
+            gg.IsActive = true;
+             AE.Net.Mail.MailMessage[] mails = await Task.Run(() => GetMailMessagesAsync(service, email, password));
+
             foreach (AE.Net.Mail.MailMessage m in mails)
             {
-                AllEMails.Add(new Email(m.From.Address, m.Subject));
+
+                AllEMails.Add(new Email(m.From.Address, m.Subject, m.Body));
             }
-            client.Dispose();
+            
+            gg.IsActive = false;
+
         }
 
 
@@ -82,14 +96,14 @@ namespace Mail
         public MainPage()
         {
 
-
+             
 
             this.InitializeComponent();
         }
 
         private void AccountsListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            int Selected = AccountsListView.SelectedIndex;
+
 
         }
 
@@ -98,10 +112,7 @@ namespace Mail
 
         }
 
-        private void InboxList_ItemClick(object sender, ItemClickEventArgs e)
-        {
 
-        }
 
         private void InboxList_Loaded(object sender, RoutedEventArgs e)
         {
@@ -198,7 +209,7 @@ namespace Mail
             try
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                ImapClient client = new ImapClient(EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Text, AuthMethods.Login, 993, true);
+                ImapClient client = new ImapClient("imap." + EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Text, AuthMethods.Login, 993, true);
                 client.Dispose();
 
 
@@ -218,9 +229,33 @@ namespace Mail
 
         private void RefreshInboxBtn_Click(object sender, RoutedEventArgs e)
         {
-            //if (Accounts.Count>1&&AccountsListView.SelectedIndex>-1){
-                RefreshInbox();
-            //}
+            if (AccountsListView.SelectedIndex > -1)
+            {
+                string service = "imap." + Accounts[AccountsListView.SelectedIndex].Service;
+                string email = Accounts[AccountsListView.SelectedIndex].EMail;
+                string password = Accounts[AccountsListView.SelectedIndex].Password;
+                RefreshInbox(service, email, password);
+
+            }
+        }
+
+        private void InboxList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (InboxList.SelectedIndex != -1)
+            {
+                try
+                {
+
+                    MessageHeader.Text = AllEMails[InboxList.SelectedIndex].EmailTheme;
+                    MessageFrom.Text = "From: " + AllEMails[InboxList.SelectedIndex].EmailSender;
+
+                    MessageBody.Text = AllEMails[InboxList.SelectedIndex].EmailBody;
+                }
+                catch
+                {
+
+                }
+            }
         }
     }
 }
