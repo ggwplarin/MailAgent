@@ -56,7 +56,7 @@ namespace Mail
     public sealed partial class MainPage : Page
     {
 
-
+        bool sortDirection = true;
 
         ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
 
@@ -72,6 +72,7 @@ namespace Mail
             client.SelectMailbox("INBOX");
 
             AE.Net.Mail.MailMessage[] mails = client.GetMessages(0, client.GetMessageCount(), false);
+            
             client.Dispose();
             return mails;
         }
@@ -80,12 +81,17 @@ namespace Mail
         {
             gg.IsActive = true;
              AE.Net.Mail.MailMessage[] mails = await Task.Run(() => GetMailMessagesAsync(service, email, password));
-
+           
             foreach (AE.Net.Mail.MailMessage m in mails)
             {
 
                 AllEMails.Add(new Email(m.From.Address, m.Subject, m.Body));
+                
             }
+            
+               AllEMails = new ObservableCollection<Email>(AllEMails.Reverse());
+                InboxList.ItemsSource = AllEMails;
+            
             
             gg.IsActive = false;
 
@@ -95,8 +101,8 @@ namespace Mail
 
         public MainPage()
         {
+            Accounts.Add(new Account("ggwp", "gmail.com", "isip_a.o.larin@mpt.ru", "Kbnthfneh1", Color.FromArgb(255, 0, 255, 255)));//for test/remowe it
 
-             
 
             this.InitializeComponent();
         }
@@ -235,6 +241,7 @@ namespace Mail
                 string email = Accounts[AccountsListView.SelectedIndex].EMail;
                 string password = Accounts[AccountsListView.SelectedIndex].Password;
                 RefreshInbox(service, email, password);
+                
 
             }
         }
@@ -257,5 +264,44 @@ namespace Mail
                 }
             }
         }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DirectionBtn_Click(object sender, RoutedEventArgs e)
+        {
+            
+
+            AllEMails = new ObservableCollection<Email>(AllEMails.Reverse());
+            InboxList.ItemsSource = AllEMails;
+        }
+
+        private void NewEmailBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
+        private void SendEmailBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+
+
+
+
+
+        //private bool Filter(Contact contact)
+        //{
+        //    return contact.FirstName.Contains(FilterByFirstName.Text, StringComparison.InvariantCultureIgnoreCase) &&
+        //            contact.LastName.Contains(FilterByLastName.Text, StringComparison.InvariantCultureIgnoreCase) &&
+        //            contact.Company.Contains(FilterByCompany.Text, StringComparison.InvariantCultureIgnoreCase);
+        //}
+
+
+
     }
 }

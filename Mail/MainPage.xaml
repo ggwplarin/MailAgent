@@ -14,52 +14,7 @@
     <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
 
-            <SymbolIcon x:Name="Report" Symbol="Flag" HorizontalAlignment="Center" Loaded="Report_Loaded" VerticalAlignment="Center" Margin="24" ToolTipService.ToolTip="Report a problem" Tapped="Report_Tapped">
-                <FlyoutBase.AttachedFlyout>
-                    <Flyout x:Name="ProblemReportFlyout" Placement="Full" ShowMode="Standard" LightDismissOverlayMode="On">
-                        <Grid Margin="8">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="Report" FontSize="28" Margin="2"/>
-                                <ComboBox x:Name="ProblemType" Grid.Row="1" PlaceholderText="Select the type of a problem" Header="Problem type" Margin="2" HorizontalAlignment="Center" Width="320">
-                                    <x:String>Cosmetic mismatch</x:String>
-                                    <x:String>Mistake in the text</x:String>
-                                    <x:String>Broken functionality</x:String>
-                                    <x:String>Performance</x:String>
-                                    <x:String>App unresponsiveness</x:String>
-                                    <x:String>Application crash</x:String>
-                                </ComboBox>
-                                <TextBox x:Name="ProblemHeader" Width="320" Margin="2" Header="Key part of the problem" MaxLength="100" HorizontalAlignment="Center"/>
-                                <TextBox x:Name="ProblemBody" Width="320" Margin="2" Header="Problem reproducing steps" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
-                                <TextBox x:Name="Expected" Width="320" Margin="2" Header="Expected result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
-                                <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                            <AppBarButton x:Name="SendReportBtn"  Grid.Row="1" Icon="Send" Label="Send" Click="SendReportBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                            <!--TODO replace this to somthing else//mb TextBlock with message-->
-                            <controls:TeachingTip x:Name="ReportBtnWarn"                
-	                        Target="{x:Bind SendReportBtn}"
-	                        Title="All fields must be filled!"
-                            Subtitle="Fill them in and try again.">
-                                <controls:TeachingTip.IconSource>
-                                    <controls:SymbolIconSource Symbol="Important" />
-                                </controls:TeachingTip.IconSource>
-                            </controls:TeachingTip>
-                            <controls:TeachingTip x:Name="ReportBtnNoConnection"                   
-	                        Target="{x:Bind SendReportBtn}"
-	                        Title="No internet connection!"
-                            Subtitle="Check your internet connection and try again.">
-                                <controls:TeachingTip.IconSource>
-                                    <controls:SymbolIconSource Symbol="ZeroBars" />
-                                </controls:TeachingTip.IconSource>
-                            </controls:TeachingTip>
-                        </Grid>
-                    </Flyout>
-                </FlyoutBase.AttachedFlyout>
-            </SymbolIcon>
+            
         </StackPanel>
 
         <controls:TeachingTip x:Name="ReportTip"                   
@@ -162,13 +117,28 @@
 
                             </Grid.ColumnDefinitions>
 
-                            <StackPanel Orientation="Horizontal">
+                            
+                        
+                        <StackPanel Orientation="Horizontal">
                                 <AppBarButton x:Name="RefreshInboxBtn" Click="RefreshInboxBtn_Click" Icon="Refresh" Height="40" Width="40"/>
                                 <AppBarButton Icon="Find" Height="40" Width="40"/>
-                                <AppBarButton Icon="Sort" Height="40" Width="40"/>
-                            </StackPanel>
+                            <AppBarButton Icon="Sort" Height="40" Width="80">
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="By date" Icon="Calendar"/>
+                                        <MenuFlyoutItem Text="By sender" Icon="People"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem x:Name="DirectionBtn" Text="Direction" Icon="Sort" Click="DirectionBtn_Click"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="Unread" Icon="Mail"/>
+                                        <MenuFlyoutItem Text="Important" Icon="Important"/>
+
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+                        </StackPanel>
                             <ProgressRing x:Name="gg" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="False" Width="64" Height="64"/>
-                        <ListView x:Name="InboxList" Grid.Row="1" SelectionChanged="InboxList_SelectionChanged" Loaded="InboxList_Loaded" ItemsSource="{x:Bind AllEMails}" Margin="0,0,0,0" >
+                        <ListView  x:Name="InboxList" Grid.Row="1" SelectionChanged="InboxList_SelectionChanged" Loaded="InboxList_Loaded" ItemsSource="{x:Bind AllEMails}" Margin="0,0,0,0" >
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local:Email">
 
@@ -200,20 +170,97 @@
 
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-
+                            
                         </ListView>
-                        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.RowSpan="2">
-                            <!--<StackPanel Orientation="Horizontal" >
+                        <ScrollViewer  Grid.Column="1" Grid.RowSpan="2" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Orientation="Vertical">
+                                <!--<StackPanel Orientation="Horizontal" >
                                 <AppBarButton/>
                                 <AppBarButton/>
                                 <AppBarButton/>
                             </StackPanel>-->
-                            <TextBlock x:Name="MessageHeader"  TextWrapping="Wrap" FontSize="28" Margin="2"/>
-                            <TextBlock x:Name="MessageFrom"  Margin="2"/>
-                            <TextBlock x:Name="MessageBody" TextWrapping="Wrap" Text="" Margin="2"/>
-                        </StackPanel>
-                    </Grid>
+                                <TextBlock x:Name="MessageHeader"  TextWrapping="Wrap" FontSize="28" Margin="2"/>
+                                <TextBlock x:Name="MessageFrom"  Margin="2"/>
+                                <TextBlock x:Name="MessageBody" TextWrapping="Wrap" Text="" Margin="2"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" Height="58" Width="58">
 
+                            <SymbolIcon HorizontalAlignment="Center" VerticalAlignment="Center" Symbol="Edit" Height="50" Width="50"/>
+
+                            <Button x:Name="NewEmailBtn" Click="NewEmailBtn_Click" CornerRadius="28" Height="56" Width="56" Style="{StaticResource ButtonRevealStyle}" BorderThickness="3">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout x:Name="SendMessageFlyout" Placement="Full" ShowMode="Standard" LightDismissOverlayMode="On">
+                                        <Grid Margin="8">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="Send EMail" FontSize="28" Margin="2"/>
+                                                
+                                                
+                                                <TextBox x:Name="EmailThemeBox" Width="320" Margin="2" Header="Email theme" MaxLength="100" HorizontalAlignment="Center"/>
+                                                <TextBox x:Name="EmailDestinationBox" Width="320" Margin="2" Header="Email to:" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                                <TextBox x:Name="EmailBodyBox" Width="320" Margin="2" Header="Email body:" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                            <AppBarButton x:Name="SendEmailBtn"  Grid.Row="1" Icon="Send" Label="Send" Click="SendEmailBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                            <!--TODO replace this to somthing else//mb TextBlock with message-->
+                                            
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Button>
+                        </Grid>
+                        <SymbolIcon x:Name="Report" Grid.RowSpan="2" Grid.ColumnSpan="2" Symbol="Flag" HorizontalAlignment="Right" Loaded="Report_Loaded" VerticalAlignment="Bottom" Margin="24" ToolTipService.ToolTip="Report a problem" Tapped="Report_Tapped">
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout x:Name="ProblemReportFlyout" Placement="Full" ShowMode="Standard" LightDismissOverlayMode="On">
+                                    <Grid Margin="8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="Report" FontSize="28" Margin="2"/>
+                                            <ComboBox x:Name="ProblemType" Grid.Row="1" PlaceholderText="Select the type of a problem" Header="Problem type" Margin="2" HorizontalAlignment="Center" Width="320">
+                                                <x:String>Cosmetic mismatch</x:String>
+                                                <x:String>Mistake in the text</x:String>
+                                                <x:String>Broken functionality</x:String>
+                                                <x:String>Performance</x:String>
+                                                <x:String>App unresponsiveness</x:String>
+                                                <x:String>Application crash</x:String>
+                                            </ComboBox>
+                                            <TextBox x:Name="ProblemHeader" Width="320" Margin="2" Header="Key part of the problem" MaxLength="100" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="ProblemBody" Width="320" Margin="2" Header="Problem reproducing steps" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="Expected" Width="320" Margin="2" Header="Expected result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                            <TextBox x:Name="Actual" Width="320" Margin="2" Header="Actual result" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                        <AppBarButton x:Name="SendReportBtn"  Grid.Row="1" Icon="Send" Label="Send" Click="SendReportBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                        <!--TODO replace this to somthing else//mb TextBlock with message-->
+                                        <controls:TeachingTip x:Name="ReportBtnWarn"                
+	                        Target="{x:Bind SendReportBtn}"
+	                        Title="All fields must be filled!"
+                            Subtitle="Fill them in and try again.">
+                                            <controls:TeachingTip.IconSource>
+                                                <controls:SymbolIconSource Symbol="Important" />
+                                            </controls:TeachingTip.IconSource>
+                                        </controls:TeachingTip>
+                                        <controls:TeachingTip x:Name="ReportBtnNoConnection"                   
+	                        Target="{x:Bind SendReportBtn}"
+	                        Title="No internet connection!"
+                            Subtitle="Check your internet connection and try again.">
+                                            <controls:TeachingTip.IconSource>
+                                                <controls:SymbolIconSource Symbol="ZeroBars" />
+                                            </controls:TeachingTip.IconSource>
+                                        </controls:TeachingTip>
+                                    </Grid>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </SymbolIcon>
+                    </Grid>
+                     
                     </SplitView.Content>
                 </SplitView>
 
