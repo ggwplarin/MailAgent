@@ -10,6 +10,7 @@
     mc:Ignorable="d"
     
     
+
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
@@ -90,7 +91,7 @@
 
                                             <TextBox x:Name="AccountNameBox" Width="320" Margin="2" Header="Account name" MaxLength="40" HorizontalAlignment="Center" PlaceholderText="John Doe"/>
                                             <TextBox x:Name="EmailAdressBox" Width="320" Margin="2" Header="EMail adress" MaxLength="40" HorizontalAlignment="Center" PlaceholderText="email@gmail.com"/>
-                                            <TextBox x:Name="EmailPasswordBox" Width="320" Margin="2" Header="EMail password" MaxLength="40" HorizontalAlignment="Center"/>
+                                            <PasswordBox x:Name="EmailPasswordBox"  PlaceholderText="qwerty" Width="320" Margin="2" Header="EMail password" MaxLength="40" HorizontalAlignment="Center"/>
                                             <TextBox x:Name="EmailServiceBox" Width="320" Margin="2" Header="EMail service" MaxLength="40" HorizontalAlignment="Center" PlaceholderText="gmail.com"/>
                                             <TextBlock Text="Avatar color" HorizontalAlignment="Center" Margin="8"/>
                                             <ColorPicker x:Name="AccountColorPicker"  HorizontalAlignment="Center" ColorSpectrumShape="Ring" IsColorPreviewVisible="False" IsColorSliderVisible="False" IsColorSpectrumVisible="True" IsHexInputVisible="False" IsColorChannelTextInputVisible="False"/>

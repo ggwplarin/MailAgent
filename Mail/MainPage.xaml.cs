@@ -215,14 +215,14 @@ namespace Mail
             try
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                ImapClient client = new ImapClient("imap." + EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Text, AuthMethods.Login, 993, true);
+                ImapClient client = new ImapClient("imap." + EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Password, AuthMethods.Login, 993, true);
                 client.Dispose();
 
 
-                Accounts.Add(new Account(AccountNameBox.Text, EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Text, AccountColorPicker.Color));
+                Accounts.Add(new Account(AccountNameBox.Text, EmailServiceBox.Text, EmailAdressBox.Text, EmailPasswordBox.Password, AccountColorPicker.Color));
                 AccountNameBox.Text = "";
                 EmailAdressBox.Text = "";
-                EmailPasswordBox.Text = "";
+                EmailPasswordBox.Password = "";
                 EmailServiceBox.Text = "";
 
                 AddNewAccFlyout.Hide();
