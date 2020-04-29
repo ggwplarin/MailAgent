@@ -101,7 +101,7 @@ namespace Mail
 
         public MainPage()
         {
-            Accounts.Add(new Account("ggwp", "gmail.com", "isip_a.o.larin@mpt.ru", "Kbnthfneh1", Color.FromArgb(255, 0, 255, 255)));//for test/remowe it
+            
 
 
             this.InitializeComponent();
