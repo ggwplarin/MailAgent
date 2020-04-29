@@ -65,14 +65,14 @@ namespace Mail
         public AE.Net.Mail.MailMessage[] GetMailMessagesAsync(string service, string email, string password)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            
+
 
             ImapClient client = new ImapClient(service, email, password, AuthMethods.Login, 993, true);
 
             client.SelectMailbox("INBOX");
 
             AE.Net.Mail.MailMessage[] mails = client.GetMessages(0, client.GetMessageCount(), false);
-            
+
             client.Dispose();
             return mails;
         }
@@ -80,19 +80,19 @@ namespace Mail
         public async void RefreshInbox(string service, string email, string password)
         {
             gg.IsActive = true;
-             AE.Net.Mail.MailMessage[] mails = await Task.Run(() => GetMailMessagesAsync(service, email, password));
-           
+            AE.Net.Mail.MailMessage[] mails = await Task.Run(() => GetMailMessagesAsync(service, email, password));
+
             foreach (AE.Net.Mail.MailMessage m in mails)
             {
 
                 AllEMails.Add(new Email(m.From.Address, m.Subject, m.Body));
-                
+
             }
-            
-               AllEMails = new ObservableCollection<Email>(AllEMails.Reverse());
-                InboxList.ItemsSource = AllEMails;
-            
-            
+
+            AllEMails = new ObservableCollection<Email>(AllEMails.Reverse());
+            InboxList.ItemsSource = AllEMails;
+
+
             gg.IsActive = false;
 
         }
@@ -178,7 +178,7 @@ namespace Mail
                 string messageText = $"Header:{ProblemHeader.Text}|Type:{ProblemType.SelectedIndex}\n\nBody:{ProblemBody.Text}\n\nExpected:{Expected.Text}\n\nActual:{Actual.Text}";
                 try
                 {
-                    System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
+                    System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();//internet test
                     System.Net.NetworkInformation.PingReply pingReply = ping.Send("www.google.com");
                     if (pingReply.Status.ToString() != "Success") { ReportBtnNoConnection.IsOpen = true; }
                     else
@@ -190,6 +190,7 @@ namespace Mail
                         Expected.Text = "";
                         Expected.Text = "";
                         ProblemType.SelectedIndex = -1;
+                        ProblemReportFlyout.Hide();
                     }
                 }
                 catch
@@ -241,7 +242,7 @@ namespace Mail
                 string email = Accounts[AccountsListView.SelectedIndex].EMail;
                 string password = Accounts[AccountsListView.SelectedIndex].Password;
                 RefreshInbox(service, email, password);
-                
+
 
             }
         }
@@ -272,7 +273,7 @@ namespace Mail
 
         private void DirectionBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
 
             AllEMails = new ObservableCollection<Email>(AllEMails.Reverse());
             InboxList.ItemsSource = AllEMails;
@@ -283,9 +284,82 @@ namespace Mail
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
-        private void SendEmailBtn_Click(object sender, RoutedEventArgs e)
+        public int SendEmailAsync(string to, string from, string service, string theme, string body,string password)
         {
+            //try
+            //{
 
+                //System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();//internet test
+                //System.Net.NetworkInformation.PingReply pingReply = ping.Send("www.google.com");
+                //if (pingReply.Status.ToString() != "Success") { return 2; }
+                //else
+                //{
+                    // отправитель - устанавливаем адрес и отображаемое в письме имя
+                    System.Net.Mail.MailAddress emailfrom = new MailAddress(from,"");
+                    // кому отправляем
+                    System.Net.Mail.MailAddress emailto = new MailAddress(to);
+                    // создаем объект сообщения
+                    System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(emailfrom, emailto);
+                    // тема письма
+                    m.Subject = theme;
+                    // текст письма
+                    m.Body = body;
+                    // письмо представляет код html
+                    m.IsBodyHtml = false;
+                    // адрес smtp-сервера и порт, с которого будем отправлять письмо
+                    SmtpClient smtp = new SmtpClient("smtp."+service, 587);
+                    // логин и пароль
+                    smtp.Credentials = new NetworkCredential(from, password);
+
+                    smtp.EnableSsl = true;
+                    smtp.Send(m);
+            return 0;
+
+                //}
+                //return 0;
+            //}
+            //catch
+            //{
+            //    return 1;
+            //}
+
+        }
+
+
+
+        private async void SendEmailBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (AccountsListView.SelectedIndex != -1 && Accounts[AccountsListView.SelectedIndex].EMail != "")
+                {
+                    string to = EmailDestinationBox.Text;
+                    string from = Accounts[AccountsListView.SelectedIndex].EMail;
+                    string service = Accounts[AccountsListView.SelectedIndex].Service;
+                    string theme = EmailThemeBox.Text;
+                    string body = EmailBodyBox.Text;
+                    string password = Accounts[AccountsListView.SelectedIndex].Password;
+
+                    int result = await Task.Run(() => SendEmailAsync(to, from, service, theme, body, password));
+                    switch (result)
+                    {
+                        case 0:
+                            //success message
+                            break;
+
+                        case 1:
+                            //error message
+                            break;
+                        case 2:
+                            //network error mesage
+                            break;
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
 

@@ -204,7 +204,8 @@
                                                 
                                                 <TextBox x:Name="EmailThemeBox" Width="320" Margin="2" Header="Email theme" MaxLength="100" HorizontalAlignment="Center"/>
                                                 <TextBox x:Name="EmailDestinationBox" Width="320" Margin="2" Header="Email to:" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
-                                                <TextBox x:Name="EmailBodyBox" Width="320" Margin="2" Header="Email body:" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="500" HorizontalAlignment="Center"/>
+                                                <TextBox x:Name="EmailBodyBox" Width="320" Margin="2" Header="Email body:" Height="Auto" AcceptsReturn="True" TextWrapping="Wrap" 
+                                                MinHeight="120"         MaxLength="500" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                             <AppBarButton x:Name="SendEmailBtn"  Grid.Row="1" Icon="Send" Label="Send" Click="SendEmailBtn_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                                             <!--TODO replace this to somthing else//mb TextBlock with message-->
